@@ -21,7 +21,7 @@ Pad::Pad() {
 
 bool Pad::IsButtonDown(PadButton btn) {
 	if (pad->stat == 0) {
-		if ((pad->type == PadTypeID::PAD_ID_DIGITAL) || (pad->type == PadTypeID::PAD_ID_ANALOG_STICK) || (pad->type == PadTypeID::PAD_ID_ANALOG)) {
+		if ((pad->type == PadTypeID::PAD_ID_DIGITAL) || (pad->type == PadTypeID::PAD_ID_ANALOG_STICK) || (pad->type == PadTypeID::PAD_ID_ANALOG) || (pad->type == PadTypeID::PAD_ID_MOUSE)) {
 			return !(pad->btn & btn);
 		}
 	}

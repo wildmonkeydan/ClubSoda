@@ -9,7 +9,7 @@ Island::Island() {
 		else {
 			int x = i - (WORLD_DIMENSION * (i / WORLD_DIMENSION));
 
-			if (i > START_ISLAND_POS && i < START_ISLAND_POS + START_ISLAND_SIZE) {
+			if (x > START_ISLAND_POS && x < START_ISLAND_POS + START_ISLAND_SIZE) {
 				map[i] = Tile(true, i);
 			}
 			else
@@ -31,18 +31,26 @@ void Island::Update(Cursor& pad) {
 	if (dir & CLIP_LEFT) {
 		pos.vx += 64;
 		pos.vz -= 64;
+		pad.state = pad.Left;
 	}
-	if (dir & CLIP_RIGHT) {
+	else if (dir & CLIP_RIGHT) {
 		pos.vx -= 64;
 		pos.vz += 64;
+		pad.state = pad.Right;
 	}
 	if (dir & CLIP_TOP) {
 		pos.vz += 64;
 		pos.vx += 64;
+		pad.state = pad.Up;
 	}
-	if (dir & CLIP_BOTTOM) {
+	else if (dir & CLIP_BOTTOM) {
 		pos.vz -= 64;
 		pos.vx -= 64;
+		pad.state = pad.Down;
+	}
+
+	if (!dir && pad.state > 1) {
+		pad.state = pad.Norm;
 	}
 
 	if (pos.vx < 0) {
@@ -61,7 +69,7 @@ void Island::Update(Cursor& pad) {
 
 	timer++;
 
-	printf("%d %d\n", pos.vx, pos.vz);
+	//printf("%d %d\n", pos.vx, pos.vz);
 
 	if (timer >= 4) {
 		waterFrame++;

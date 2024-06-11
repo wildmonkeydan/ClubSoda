@@ -54,6 +54,10 @@ int main(int argc, const char **argv) {
 	LoadTexture(tilesetDat, &img);
 	free(tilesetDat);
 
+	u_long* iconsDat = (u_long*)cd.LoadFile("ICONS.TIM;1");
+	LoadTexture(iconsDat, &img);
+	free(iconsDat);
+
 	int x  = 96, y  = 54;
 	int dx = 1, dy = 1;
 	int factor = UINT16_MAX / 120;

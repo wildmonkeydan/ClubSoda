@@ -34,7 +34,7 @@ Tile::Tile(bool land, Material mat, int pos) {
 void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned char waterFrame) {
 
 	for (int i = 0; i < 4; i++) {
-
+		// Draw distance, for performance and memory reasons
 		if ((verts[i].vx - origin.vx) > 12000 || (verts[i].vx - origin.vx) < -12000)
 			return;
 		if ((verts[i].vz - origin.vz) > 12000 || (verts[i].vz - origin.vz) < -12000)
@@ -46,8 +46,10 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 	}
 
 	int p;
+	// Flat-shaded textured quad
 	POLY_FT4* poly;
 
+	// Get the next available space in the GPU queue
 	poly = (POLY_FT4*)ctx._next_packet;
 
 	// Load first three vertices to GTE
@@ -56,11 +58,16 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 		&localVerts[1],
 		&localVerts[2]);
 
+	// Rotation, Translation, Perspective Triple  -  Process coords
 	gte_rtpt();
 
+	// Get the average distance of the coords from the camera, used for depth sorting
 	gte_avsz3();
+	// Retieve the result from the register
 	gte_stotz(&p);
 
+
+	// Checks if it's too far or too close/behind cam  -  basically near/far clipping
 	if (((p >> 2) >= DEFAULT_OT_LENGTH) || ((p >> 2) <= 0))
 		return;
 
@@ -87,12 +94,18 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 	gte_avsz4();
 	gte_stotz(&p);
 
+	// Checks if it's too far or too close/behind cam  -  basically near/far clipping
+	if (((p >> 2) >= DEFAULT_OT_LENGTH) || ((p >> 2) <= 0))
+		return;
+
 	setRGB0(poly, 128, 128, 128);
+	// Set 256x256 area in VRAM the quad can use for it's texture
 	setTPage(poly, 1, 1, 640, 0);
+	// Set the Colour LUT as the texture is 8-bit indexed 
 	setClut(poly, 640, 472);
 	SetMatUV(poly, waterFrame);
 
-
+	// Add the polygon to the draw queue
 	addPrim(ctx._buffers._ot + p, poly);
 	poly++;
 

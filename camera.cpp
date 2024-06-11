@@ -5,8 +5,6 @@
 #define CENTERX			SCREEN_XRES>>1
 #define CENTERY			SCREEN_YRES>>1
 
-#define MANUAL_CAM
-
 
 Camera::Camera(VECTOR pos, VECTOR rot) {
 	position = pos;
@@ -14,9 +12,7 @@ Camera::Camera(VECTOR pos, VECTOR rot) {
 
 	//setVector(&position, 3401, 1468, 9608);
 	//setVector(&rotation, -6136, 0, 0);
-
-	
-	
+	setVector(&origin, ONE * 600, 0, ONE * 600);
 
 	// Initialize the GTE
 	InitGeom();
@@ -119,6 +115,31 @@ void Camera::Update(Pad& pad, RenderContext& ctx) {
 
 	}
 #endif
+
+	if (pad.GetType() == PadTypeID::PAD_ID_MOUSE) {
+		if (pad.IsButtonDown(PadButton::MOUSE_RIGHT)) {
+			DVECTOR mouseMov = pad.GetMouseDelta();
+
+			int angle = mouseMov.vx << 10;
+			printf("%d\n", angle);
+			
+
+			if (angle != 0) {
+				int s = isin(angle);
+				int c = icos(angle);
+
+				DVECTOR camPos = { 0 };
+				position.vx -= origin.vx;
+				position.vz -= origin.vz;
+
+				camPos.vx = position.vx * c - position.vz * s;
+				camPos.vy = position.vx * s + position.vz * c;
+
+				position.vx = camPos.vx + origin.vx;
+				position.vz = camPos.vy + origin.vz;
+			}
+		}
+	}
 	
 	/*FntPrint(-1, "X=%d Y=%d Z=%d\n",
 		position.vx >> 12,

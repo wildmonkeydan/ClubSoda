@@ -14,7 +14,7 @@ public:
 	VECTOR position;
 
 private:
-	
+	VECTOR origin;
 	VECTOR rotation;
 
 	VECTOR	tpos;			// Translation value for matrix calculations

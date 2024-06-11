@@ -62,6 +62,7 @@
 			<file name="SYSTEM.CNF"		type="data" source="${PROJECT_SOURCE_DIR}/system.cnf" />
 			<file name="TEMPLATE.EXE"	type="data" source="template.exe" />
 			<file name="TILES.TIM"		type="data" source="${PROJECT_SOURCE_DIR}/data/ClubSodaTileset1.tim" />
+			<file name="ICONS.TIM"		type="data" source="${PROJECT_SOURCE_DIR}/data/ClubSodaIcons.tim" />
 			<!--
 				This file is only required if you are using dynamic linking
 				(see the system/dynlink example). It contains the executable's
