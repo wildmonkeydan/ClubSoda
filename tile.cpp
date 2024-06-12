@@ -43,7 +43,7 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 			return;
 
 		localVerts[i].vx = (verts[i].vx - origin.vx);
-		localVerts[i].vy = 0;
+		localVerts[i].vy = verts[i].vy;
 		localVerts[i].vz = (verts[i].vz - origin.vz);
 	}
 
@@ -155,4 +155,18 @@ void Tile::InitVerts(int pos) {
 	verts[3].vx = (pos % WORLD_DIMENSION + 1) * 1024;
 	verts[3].vy = 0;
 	verts[3].vz = (pos / WORLD_DIMENSION + 1) * 1024;
+}
+
+void Tile::AlterDepth(short addend) {
+	printf("added %d to tile %d", addend, index);
+
+	for (int i = 0; i < 4; i++) {
+		verts[i].vy += addend;
+	}
+}
+
+void Tile::AlterDepth(int absolute) {
+	for (int i = 0; i < 4; i++) {
+		verts[i].vy = absolute;
+	}
 }

@@ -69,7 +69,7 @@ int main(int argc, const char **argv) {
 	for (;;) {		
 		day.Update();
 		day.Draw(ctx);
-		cursor.Update(pad);
+		cursor.Update(pad, isle);
 		cursor.Draw(ctx);
 
 		/*

@@ -91,3 +91,7 @@ void Island::Draw(RenderContext& ctx, Cursor& cursor) {
 		//}
 	}
 }
+
+Tile* Island::GetTileAtIndex(int index) {
+	return &map[index];
+}

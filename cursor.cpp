@@ -1,11 +1,12 @@
 #include "cursor.h"
+#include "island.h"
 
 Cursor::Cursor() {
 	pos.vx = SCREEN_XRES>>1;
 	pos.vy = SCREEN_YRES>>1;
 }
 
-void Cursor::Update(Pad& pad) {
+void Cursor::Update(Pad& pad, Island& isle) {
 	PadTypeID type = (PadTypeID)pad.GetType();
 	DVECTOR delta = { 0 };
 
@@ -16,7 +17,30 @@ void Cursor::Update(Pad& pad) {
 	pos.vx += delta.vx;
 	pos.vy += delta.vy;
 
+	if (pad.IsButtonDown(PadButton::MOUSE_LEFT) && toolCooldown == 0 && selectedTile != -1) {
+		printf("Tool use\n");
+		switch (tool)
+		{
+		case Cursor::Select:
+			break;
+		case Cursor::Terra:
+			Terraform(isle);
+			break;
+		case Cursor::Place:
+			break;
+		case Cursor::Destroy:
+			break;
+		default:
+			break;
+		}
+
+		toolCooldown = 15;
+	}
+
 	selectedTile = -1;
+	if (toolCooldown) {
+		toolCooldown--;
+	}
 }
 
 void Cursor::Draw(RenderContext& ctx) {
@@ -125,4 +149,9 @@ bool Cursor::CheckTile(POLY_FT4* tile, int index) {
 	else {
 		return false;
 	}
+}
+
+void Cursor::Terraform(Island& isle) {
+	Tile* main = isle.GetTileAtIndex(selectedTile);
+	main->AlterDepth((short)256);
 }

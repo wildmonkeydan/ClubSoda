@@ -1,12 +1,14 @@
 #pragma once
 #include "tile.h"
-#include "cursor.h"
+
+class Cursor;
 
 class Island {
 public:
 	Island();
 	void Update(Cursor& pad);
 	void Draw(RenderContext& ctx, Cursor& cursor);
+	Tile* GetTileAtIndex(int index);
 private:
 	Tile map[NUM_TILES];
 	RECT normRect;

@@ -30,6 +30,8 @@ public:
 
 	void Update();
 	void Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned char waterFrame, Cursor& cursor);
+	void AlterDepth(short addend);
+	void AlterDepth(int absolute);
 private:
 	void InitVerts(int pos);
 	void SetMatUV(POLY_FT4* poly, unsigned char waterFrame);
