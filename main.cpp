@@ -25,6 +25,7 @@
 #include "island.h"
 #include "cd.h"
 #include "utils.h"
+#include "day.h"
 
 /* Main */
 
@@ -47,6 +48,7 @@ int main(int argc, const char **argv) {
 	Cursor cursor;
 	Camera cam(camPos, camRot);
 	Island isle;
+	Day day;
 
 	TIM_IMAGE img;
 
@@ -65,7 +67,8 @@ int main(int argc, const char **argv) {
 	//FntOpen(0, 0, 320, 240, 0, 256);
 
 	for (;;) {		
-
+		day.Update();
+		day.Draw(ctx);
 		cursor.Update(pad);
 		cursor.Draw(ctx);
 

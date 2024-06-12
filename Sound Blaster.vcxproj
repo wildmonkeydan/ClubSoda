@@ -88,6 +88,7 @@ D:\pcsx-redux-nightly-18791.20240512.1-x64\pcsx-redux.exe</NMakeBuildCommandLine
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cd.cpp" />
     <ClCompile Include="cursor.cpp" />
+    <ClCompile Include="day.cpp" />
     <ClCompile Include="island.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pad.cpp" />
@@ -99,6 +100,7 @@ D:\pcsx-redux-nightly-18791.20240512.1-x64\pcsx-redux.exe</NMakeBuildCommandLine
     <ClInclude Include="camera.h" />
     <ClInclude Include="cd.h" />
     <ClInclude Include="cursor.h" />
+    <ClInclude Include="day.h" />
     <ClInclude Include="island.h" />
     <ClInclude Include="pad.h" />
     <ClInclude Include="render.h" />
