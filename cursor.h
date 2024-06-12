@@ -17,9 +17,12 @@ public:
 	void Update(Pad& pad);
 	void Draw(RenderContext& ctx);
 	SVECTOR GetRay();
+	bool CheckTile(POLY_FT4* tile, int index);
 	
 	DVECTOR pos;
 	State state = Norm;
 private:
 	RECT GetTexRect();
+
+	int selectedTile = -1;
 };

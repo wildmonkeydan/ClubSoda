@@ -82,7 +82,7 @@ int main(int argc, const char **argv) {
 
 		cam.Update(pad, ctx);
 		isle.Update(cursor);
-		isle.Draw(ctx);
+		isle.Draw(ctx, cursor);
 
 		// Draw some text in front of the square (Z = 0, primitives with higher
 		// Z indices are drawn first).

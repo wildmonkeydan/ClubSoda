@@ -3,6 +3,7 @@
 #include <psxgpu.h>
 
 #include "render.h"
+#include "cursor.h"
 
 
 constexpr int WORLD_DIMENSION = 128;
@@ -28,7 +29,7 @@ public:
 	Tile(bool land, Material mat, int pos);
 
 	void Update();
-	void Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned char waterFrame);
+	void Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned char waterFrame, Cursor& cursor);
 private:
 	void InitVerts(int pos);
 	void SetMatUV(POLY_FT4* poly, unsigned char waterFrame);
@@ -40,4 +41,5 @@ private:
 
 	short xDiff;
 	short zDiff;
+	int index;
 };

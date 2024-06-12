@@ -21,6 +21,7 @@ Tile::Tile(bool land, int pos) {
 	}
 
 	InitVerts(pos);
+	index = pos;
 }
 
 Tile::Tile(bool land, Material mat, int pos) {
@@ -28,10 +29,11 @@ Tile::Tile(bool land, Material mat, int pos) {
 	material = mat;
 
 	InitVerts(pos);
+	index = pos;
 }
 
 
-void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned char waterFrame) {
+void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned char waterFrame, Cursor& cursor) {
 
 	for (int i = 0; i < 4; i++) {
 		// Draw distance, for performance and memory reasons
@@ -98,7 +100,10 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 	if (((p >> 2) >= DEFAULT_OT_LENGTH) || ((p >> 2) <= 0))
 		return;
 
-	setRGB0(poly, 128, 128, 128);
+	bool hover = cursor.CheckTile(poly, index);
+	unsigned char colour = hover ? 200 : 128;
+
+	setRGB0(poly, colour, colour, colour);
 	// Set 256x256 area in VRAM the quad can use for it's texture
 	setTPage(poly, 1, 1, 640, 0);
 	// Set the Colour LUT as the texture is 8-bit indexed 

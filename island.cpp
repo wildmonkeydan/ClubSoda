@@ -82,12 +82,12 @@ void Island::Update(Cursor& pad) {
 	}
 }
 
-void Island::Draw(RenderContext& ctx) {
+void Island::Draw(RenderContext& ctx, Cursor& cursor) {
 
 	int start = (pos.vx >> 10) + ((pos.vz >> 10) << 7);
 	for (int i = start; i < start + 2048; i++) {
 		//if (i - (i >> 7) > (pos.vx >> 10)) {
-			map[i].Draw(pos, ctx, screen_clip, waterFrame);
+			map[i].Draw(pos, ctx, screen_clip, waterFrame, cursor);
 		//}
 	}
 }

@@ -15,6 +15,8 @@ void Cursor::Update(Pad& pad) {
 
 	pos.vx += delta.vx;
 	pos.vy += delta.vy;
+
+	selectedTile = -1;
 }
 
 void Cursor::Draw(RenderContext& ctx) {
@@ -70,4 +72,57 @@ RECT Cursor::GetTexRect() {
 
 SVECTOR Cursor::GetRay() {
 	
+}
+
+bool Cursor::CheckTile(POLY_FT4* tile, int index) {
+	if (selectedTile == -1) {
+		bool inside = false;
+
+		if (tile->x0 > 1000) {
+			return false;
+		}
+
+		if (((tile->y0 > pos.vy && tile->y1 < pos.vy) || (tile->y0 < pos.vy && tile->y1 > pos.vy)) &&
+			(pos.vx < (tile->x1 - tile->x0) * (pos.vy - tile->y0) / (tile->y1 - tile->y0) + tile->x0))
+		{
+			inside = !inside;
+		}
+
+		if (((tile->y1 > pos.vy && tile->y3 < pos.vy) || (tile->y1 < pos.vy && tile->y3 > pos.vy)) &&
+			(pos.vx < (tile->x3 - tile->x1) * (pos.vy - tile->y1) / (tile->y3 - tile->y1) + tile->x1))
+		{
+			inside = !inside;
+		}
+
+		if (((tile->y3 > pos.vy && tile->y2 < pos.vy) || (tile->y3 < pos.vy && tile->y2 > pos.vy)) &&
+			(pos.vx < (tile->x2 - tile->x3) * (pos.vy - tile->y3) / (tile->y2 - tile->y3) + tile->x3))
+		{
+			inside = !inside;
+		}
+
+		if (((tile->y2 > pos.vy && tile->y0 < pos.vy) || (tile->y2 < pos.vy && tile->y0 > pos.vy)) &&
+			(pos.vx < (tile->x0 - tile->x2) * (pos.vy - tile->y2) / (tile->y0 - tile->y2) + tile->x2))
+		{
+			inside = !inside;
+		}
+
+		/*
+		for (int i = 0, j = pointCount - 1; i < pointCount; j = i++)
+		{
+			if ((points[i].y > point.y) != (points[j].y > point.y) &&
+				(point.x < (points[j].x - points[i].x) * (point.y - points[i].y) / (points[j].y - points[i].y) + points[i].x))
+			{
+				inside = !inside;
+			}
+		}*/
+
+		if (inside) {
+			selectedTile = index;
+		}
+
+		return inside;
+	}
+	else {
+		return false;
+	}
 }

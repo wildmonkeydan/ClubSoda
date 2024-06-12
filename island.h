@@ -6,7 +6,7 @@ class Island {
 public:
 	Island();
 	void Update(Cursor& pad);
-	void Draw(RenderContext& ctx);
+	void Draw(RenderContext& ctx, Cursor& cursor);
 private:
 	Tile map[NUM_TILES];
 	RECT normRect;
