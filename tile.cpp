@@ -158,7 +158,7 @@ void Tile::InitVerts(int pos) {
 }
 
 void Tile::AlterDepth(short addend) {
-	printf("added %d to tile %d", addend, index);
+	printf("added %d to tile %d\n", addend, index);
 
 	for (int i = 0; i < 4; i++) {
 		verts[i].vy += addend;
@@ -168,5 +168,17 @@ void Tile::AlterDepth(short addend) {
 void Tile::AlterDepth(int absolute) {
 	for (int i = 0; i < 4; i++) {
 		verts[i].vy = absolute;
+	}
+}
+
+void Tile::MoveVerts(char index1, short value1, char index2, short value2) {
+	printf("added %d to vert %d and %d to vert %d in tile %d\n", value1, index1, value2, index2, index);
+
+	if (index1 != -1) {
+		verts[index1].vy += value1;
+	}
+
+	if (index2 != -1) {
+		verts[index2].vy += value2;
 	}
 }

@@ -1,6 +1,16 @@
 #include "cursor.h"
 #include "island.h"
 
+constexpr int SURROUND_OFFSETS[] = { WORLD_DIMENSION - 1, WORLD_DIMENSION, WORLD_DIMENSION + 1,
+									 - 1,									1,
+									 -WORLD_DIMENSION - 1, -WORLD_DIMENSION, -WORLD_DIMENSION + 1 };
+
+constexpr char SURROUND_VERTS[][2] = { { 1, -1 }, { 1, 0 }, { 0, -1 },
+									   { 1, 3 },		     { 0, 2 },
+									   { 3, -1 } , { 3, 2 }, { 2, -1 } };
+
+constexpr short	TERRA_STEP = 128;
+
 Cursor::Cursor() {
 	pos.vx = SCREEN_XRES>>1;
 	pos.vy = SCREEN_YRES>>1;
@@ -153,5 +163,16 @@ bool Cursor::CheckTile(POLY_FT4* tile, int index) {
 
 void Cursor::Terraform(Island& isle) {
 	Tile* main = isle.GetTileAtIndex(selectedTile);
-	main->AlterDepth((short)256);
+	if (main->isLand) {
+		main->AlterDepth(TERRA_STEP);
+
+		int nextPos;
+
+		for (int i = 0; i < 8; i++) {
+			nextPos = selectedTile + SURROUND_OFFSETS[i];
+			if (nextPos < NUM_TILES && nextPos > 0) {
+				isle.GetTileAtIndex(nextPos)->MoveVerts(SURROUND_VERTS[i][0], TERRA_STEP, SURROUND_VERTS[i][1], TERRA_STEP);
+			}
+		}
+	}
 }
