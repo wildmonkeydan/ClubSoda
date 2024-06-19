@@ -37,9 +37,9 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 
 	for (int i = 0; i < 4; i++) {
 		// Draw distance, for performance and memory reasons
-		if ((verts[i].vx - origin.vx) > 12000 || (verts[i].vx - origin.vx) < -12000)
+		if ((verts[i].vx - origin.vx) > 10000 || (verts[i].vx - origin.vx) < -10000)
 			return;
-		if ((verts[i].vz - origin.vz) > 12000 || (verts[i].vz - origin.vz) < -12000)
+		if ((verts[i].vz - origin.vz) > 10000 || (verts[i].vz - origin.vz) < -10000)
 			return;
 
 		localVerts[i].vx = (verts[i].vx - origin.vx);
@@ -111,7 +111,7 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 	SetMatUV(poly, waterFrame);
 
 	// Add the polygon to the draw queue
-	addPrim(ctx._buffers._ot + p, poly);
+	addPrim(ctx._buffers[ctx._active_buffer]._ot + p, poly);
 	poly++;
 
 	ctx._next_packet = (uint8_t*)poly;
@@ -125,10 +125,9 @@ void Tile::SetMatUV(POLY_FT4* poly, unsigned char waterFrame) {
 		u = 128 + ((waterFrame / 4) * 64);
 		v = (waterFrame % 4) * 64;
 		break;
-	case Sand:
-		u = 0;
-		v = 0;
-		break;
+	default:
+		u = MAT_UVS[material][0];
+		v = MAT_UVS[material][1];
 	}
 
 	setUV4(poly, u, v, u + 63, v,
@@ -181,4 +180,12 @@ void Tile::MoveVerts(char index1, short value1, char index2, short value2) {
 	if (index2 != -1) {
 		verts[index2].vy += value2;
 	}
+}
+
+void Tile::SetMaterial(Material mat) {
+	material = mat;
+}
+
+Tile::Material Tile::GetMaterial() {
+	return material;
 }

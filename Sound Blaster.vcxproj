@@ -85,26 +85,32 @@ D:\pcsx-redux-nightly-18791.20240512.1-x64\pcsx-redux.exe</NMakeBuildCommandLine
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bank.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cd.cpp" />
     <ClCompile Include="cursor.cpp" />
     <ClCompile Include="day.cpp" />
     <ClCompile Include="island.cpp" />
+    <ClCompile Include="jukebox.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pad.cpp" />
     <ClCompile Include="render.cpp" />
     <ClCompile Include="tile.cpp" />
+    <ClCompile Include="toolbar.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bank.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="cd.h" />
     <ClInclude Include="cursor.h" />
     <ClInclude Include="day.h" />
     <ClInclude Include="island.h" />
+    <ClInclude Include="jukebox.h" />
     <ClInclude Include="pad.h" />
     <ClInclude Include="render.h" />
     <ClInclude Include="tile.h" />
+    <ClInclude Include="toolbar.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

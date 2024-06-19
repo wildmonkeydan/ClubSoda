@@ -1,5 +1,9 @@
 #include "cursor.h"
 #include "island.h"
+#include "toolbar.h"
+#include "utils.h"
+
+#include <stdlib.h>
 
 constexpr int SURROUND_OFFSETS[] = { WORLD_DIMENSION - 1, WORLD_DIMENSION, WORLD_DIMENSION + 1,
 									 - 1,									1,
@@ -16,16 +20,17 @@ Cursor::Cursor() {
 	pos.vy = SCREEN_YRES>>1;
 }
 
-void Cursor::Update(Pad& pad, Island& isle) {
+void Cursor::Update(Pad& pad, Island& isle, Toolbar& toolbar, Bank& bank) {
 	PadTypeID type = (PadTypeID)pad.GetType();
 	DVECTOR delta = { 0 };
 
-	if (type == PadTypeID::PAD_ID_MOUSE && !pad.IsButtonDown(PadButton::MOUSE_RIGHT)) {
-		delta = pad.GetMouseDelta();
-	}
+	delta = pad.GetMouseDelta();
 
 	pos.vx += delta.vx;
 	pos.vy += delta.vy;
+
+	pos.vx = clamp(24, 640, pos.vx);
+	pos.vy = clamp(24, 480, pos.vy);
 
 	if (pad.IsButtonDown(PadButton::MOUSE_LEFT) && toolCooldown == 0 && selectedTile != -1) {
 		printf("Tool use\n");
@@ -39,6 +44,12 @@ void Cursor::Update(Pad& pad, Island& isle) {
 		case Cursor::Place:
 			break;
 		case Cursor::Destroy:
+			break;
+		case Cursor::Paint:
+			DoPaint(isle, toolbar, bank);
+			break;
+		case Cursor::Expand:
+			DoExpand(isle, toolbar, bank);
 			break;
 		default:
 			break;
@@ -116,6 +127,11 @@ bool Cursor::CheckTile(POLY_FT4* tile, int index) {
 			return false;
 		}
 
+		if (abs(tile->y0 - pos.vy) > 50) {
+			//printf("Skipped %d\n", index);
+			return false;
+		}
+
 		if (((tile->y0 > pos.vy && tile->y1 < pos.vy) || (tile->y0 < pos.vy && tile->y1 > pos.vy)) &&
 			(pos.vx < (tile->x1 - tile->x0) * (pos.vy - tile->y0) / (tile->y1 - tile->y0) + tile->x0))
 		{
@@ -174,5 +190,30 @@ void Cursor::Terraform(Island& isle) {
 				isle.GetTileAtIndex(nextPos)->MoveVerts(SURROUND_VERTS[i][0], TERRA_STEP, SURROUND_VERTS[i][1], TERRA_STEP);
 			}
 		}
+	}
+}
+
+void Cursor::DoPaint(Island& isle, Toolbar& toolbar, Bank& bank) {
+	Tile* main = isle.GetTileAtIndex(selectedTile);
+
+	if (main->GetMaterial() != toolbar.GetCurrentMaterial()) {
+		if (main->isLand && bank.Alter(-20)) {
+			main->SetMaterial(toolbar.GetCurrentMaterial());
+		}
+	}
+}
+
+void Cursor::DoExpand(Island& isle, Toolbar& toolbar, Bank& bank) {
+	Tile* main = isle.GetTileAtIndex(selectedTile);
+
+	main->isLand = !main->isLand;
+
+	if (main->isLand) {
+		if(bank.Alter(-100))
+			main->SetMaterial(Tile::Beach);
+	}
+	else {
+		main->SetMaterial(Tile::Waves);
+		bank.Alter(100);
 	}
 }

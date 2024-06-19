@@ -35,3 +35,7 @@ int test_clip(RECT* clip, short x, short y);
 void LoadTexture(u_long* tim, TIM_IMAGE* tparam);
 
 bool CheckRecs(RECT& rec1, RECT& rec2);
+
+int clamp(int min, int max, int value);
+
+int loop(int min, int max, int value);

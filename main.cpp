@@ -19,13 +19,16 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include "render.h"
+#include "bank.h"
 #include "cursor.h"
 #include "camera.h"
 #include "island.h"
 #include "cd.h"
 #include "utils.h"
 #include "day.h"
+#include "toolbar.h"
+#include "bank.h"
+#include "jukebox.h"
 
 /* Main */
 
@@ -48,7 +51,10 @@ int main(int argc, const char **argv) {
 	Cursor cursor;
 	Camera cam(camPos, camRot);
 	Island isle;
+	Toolbar toolbar;
 	Day day;
+	Bank bank;
+	Jukebox juke;
 
 	TIM_IMAGE img;
 
@@ -60,17 +66,22 @@ int main(int argc, const char **argv) {
 	LoadTexture(iconsDat, &img);
 	free(iconsDat);
 
+
 	int x  = 96, y  = 54;
 	int dx = 1, dy = 1;
 	int factor = UINT16_MAX / 120;
 
+	juke.Begin();
 	//FntOpen(0, 0, 320, 240, 0, 256);
 
 	for (;;) {		
 		day.Update();
 		day.Draw(ctx);
-		cursor.Update(pad, isle);
+		cursor.Update(pad, isle, toolbar, bank);
 		cursor.Draw(ctx);
+		toolbar.Update(pad, cursor);
+		toolbar.Draw(ctx);
+		bank.Draw(ctx);
 
 		/*
 		// Draw the square by allocating a TILE (i.e. untextured solid color

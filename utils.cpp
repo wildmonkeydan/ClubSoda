@@ -91,3 +91,27 @@ bool CheckRecs(RECT& rec1, RECT& rec2) {
 	return (rec1.x < (rec2.x + rec2.w) && (rec1.x + rec1.w) > rec2.x) &&
 		(rec1.y < (rec2.y + rec2.h) && (rec1.y + rec1.h) > rec2.y);
 }
+
+int clamp(int min, int max, int value) {
+	if (value > max) {
+		value = max;
+	}
+
+	if (value < min) {
+		value = min;
+	}
+
+	return value;
+}
+
+int loop(int min, int max, int value) {
+	if (value > max) {
+		value = min;
+	}
+
+	if (value < min) {
+		value = max;
+	}
+
+	return value;
+}

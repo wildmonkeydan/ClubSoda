@@ -28,22 +28,25 @@ void RenderBuffer::setup(int x, int y, int w, int h, int r, int g, int b) {
 	// Set the framebuffer's VRAM coordinates.
 	SetDefDrawEnv(&_draw_env, x, y, w, h);
 	SetDefDispEnv(&_disp_env, x, y, w, h);
-	_disp_env.isinter = 1;
 
 	// Set the default background color and enable auto-clearing.
 	setRGB0(&_draw_env, r, g, b);
 	_draw_env.isbg = 1;
+	_disp_env.isinter = 1;
 }
+
 
 
 RenderContext::RenderContext(std::size_t ot_length, std::size_t buffer_length)
 	: _buffers{
+			RenderBuffer(ot_length, buffer_length),
 			RenderBuffer(ot_length, buffer_length)
 	} {}
 
 void RenderContext::setup(int w, int h, int r, int g, int b) {
 	// Place the two framebuffers vertically in VRAM.
-	_buffers.setup(0, 0, w, h, r, g, b);
+	_buffers[0].setup(0, 0, w, h, r, g, b);
+	_buffers[1].setup(0, 0, w, h, r, g, b);
 
 	// Initialize the first buffer and clear its OT so that it can be used for
 	// drawing.
@@ -68,7 +71,7 @@ void RenderContext::flip(void) {
 
 	// Switch over to the next buffer, clear it and reset the packet allocation
 	// pointer.
-	//_active_buffer ^= 1;
+	_active_buffer ^= 1;
 	_next_packet = _draw_buffer().buffer_start();
 	_draw_buffer().clear_ot();
 }

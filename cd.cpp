@@ -9,7 +9,7 @@ void CD::Init() {
 	// Master volume should be in range 0x0000 - 0x3fff
 	SpuSetCommonMasterVolume(0x3fff, 0x3fff);
 	// Cd volume should be in range 0x0000 - 0x7fff
-	SpuSetCommonCDVolume(0x2fff, 0x2fff);
+	SpuSetCommonCDVolume(0x2aff, 0x2aff);
 	// Set transfer mode 
 	SpuSetTransferMode(SPU_TRANSFER_BY_DMA);
 }

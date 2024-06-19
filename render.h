@@ -56,14 +56,14 @@ private:
 	// These functions are simply shorthands for _buffers[_active_buffer] and
 	// _buffers[_active_buffer ^ 1] respectively. They are only used internally.
 	inline RenderBuffer& _draw_buffer(void) {
-		return _buffers;
+		return _buffers[_active_buffer];
 	}
 	inline RenderBuffer& _disp_buffer(void) {
-		return _buffers;
+		return _buffers[_active_buffer ^ 1];
 	}
 
 public:
-	RenderBuffer _buffers;
+	RenderBuffer _buffers[2];
 	int          _active_buffer;
 	std::uint8_t* _next_packet;
 

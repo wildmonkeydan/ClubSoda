@@ -13,6 +13,9 @@ public:
 	DVECTOR GetMouseDelta();
 	bool IsFaceButtonDown();
 	unsigned char GetType();
+
+	char GetToolbarScroll();
+	char GetToolScroll();
 private:
 	PADTYPE* pad = nullptr;
 	char pad_buff[2][34];

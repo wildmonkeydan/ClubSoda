@@ -13,6 +13,9 @@ constexpr int START_ISLAND_POS = 56;
 constexpr int START_ISLAND_OFFSET = (START_ISLAND_POS * WORLD_DIMENSION) + (WORLD_DIMENSION / 2) - START_ISLAND_SIZE;
 constexpr int START_ISLAND_END = START_ISLAND_OFFSET + START_ISLAND_SIZE * WORLD_DIMENSION;
 
+constexpr int NUM_MAT = 4;					//  Sand   Beach  Grass    Forest
+constexpr unsigned char MAT_UVS[NUM_MAT][2] = { {0,0}, {0,0}, {64, 0}, {0, 64} };
+
 class Tile {
 public:
 	enum Material {
@@ -33,6 +36,8 @@ public:
 	void AlterDepth(short addend);
 	void AlterDepth(int absolute);
 	void MoveVerts(char index1, short value1, char index2, short value2);
+	void SetMaterial(Material mat);
+	Material GetMaterial();
 	
 	bool isLand;
 private:

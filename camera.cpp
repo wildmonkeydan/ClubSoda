@@ -120,6 +120,7 @@ void Camera::Update(Pad& pad, RenderContext& ctx) {
 		if (pad.IsButtonDown(PadButton::MOUSE_RIGHT)) {
 			DVECTOR mouseMov = pad.GetMouseDelta();
 
+
 			int angle = mouseMov.vx << 10;
 			printf("%d\n", angle);
 			
