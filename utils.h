@@ -39,3 +39,5 @@ bool CheckRecs(RECT& rec1, RECT& rec2);
 int clamp(int min, int max, int value);
 
 int loop(int min, int max, int value);
+
+void LookAt(VECTOR* eye, VECTOR* at, SVECTOR* up, MATRIX* mtx);

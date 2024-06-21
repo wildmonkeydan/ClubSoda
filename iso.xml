@@ -61,8 +61,16 @@
 		<directory_tree>
 			<file name="SYSTEM.CNF"		type="data" source="${PROJECT_SOURCE_DIR}/system.cnf" />
 			<file name="TEMPLATE.EXE"	type="data" source="template.exe" />
+			
 			<file name="TILES.TIM"		type="data" source="${PROJECT_SOURCE_DIR}/data/ClubSodaTileset1.tim" />
 			<file name="ICONS.TIM"		type="data" source="${PROJECT_SOURCE_DIR}/data/ClubSodaIcons.tim" />
+			<file name="CAN.TIM"		type="data" source="${PROJECT_SOURCE_DIR}/data/CanTex.tim" />
+			<file name="OBJS.TIM"		type="data" source="${PROJECT_SOURCE_DIR}/data/ClubSodaObjects.tim" />
+			
+			<file name="SODA.SMD"		type="data" source="${PROJECT_SOURCE_DIR}/data/Can.smd" />
+			<file name="ICE.SMD"		type="data" source="${PROJECT_SOURCE_DIR}/data/IceCream.smd" />
+			<file name="FLAT.SMD"		type="data" source="${PROJECT_SOURCE_DIR}/data/Flats.smd" />
+			<file name="PALM.SMD"		type="data" source="${PROJECT_SOURCE_DIR}/data/PalmTree.smd" />
 			<!--
 				This file is only required if you are using dynamic linking
 				(see the system/dynlink example). It contains the executable's

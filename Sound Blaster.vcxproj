@@ -93,6 +93,8 @@ D:\pcsx-redux-nightly-18791.20240512.1-x64\pcsx-redux.exe</NMakeBuildCommandLine
     <ClCompile Include="island.cpp" />
     <ClCompile Include="jukebox.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="pad.cpp" />
     <ClCompile Include="render.cpp" />
     <ClCompile Include="tile.cpp" />
@@ -107,6 +109,8 @@ D:\pcsx-redux-nightly-18791.20240512.1-x64\pcsx-redux.exe</NMakeBuildCommandLine
     <ClInclude Include="day.h" />
     <ClInclude Include="island.h" />
     <ClInclude Include="jukebox.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="pad.h" />
     <ClInclude Include="render.h" />
     <ClInclude Include="tile.h" />

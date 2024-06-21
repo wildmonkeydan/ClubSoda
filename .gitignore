@@ -31,6 +31,12 @@
 *.out
 *.app
 
+# Assets
+*.smx
+*.rsd
+*.mat
+*.ply
+
 .vs
 build
 x64

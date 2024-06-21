@@ -38,6 +38,7 @@ public:
 	void MoveVerts(char index1, short value1, char index2, short value2);
 	void SetMaterial(Material mat);
 	Material GetMaterial();
+	VECTOR PlaceObject(int offset);
 	
 	bool isLand;
 private:

@@ -189,3 +189,9 @@ void Tile::SetMaterial(Material mat) {
 Tile::Material Tile::GetMaterial() {
 	return material;
 }
+
+VECTOR Tile::PlaceObject(int offset) {
+	VECTOR vec;
+	setVector(&vec, verts[0].vx, verts[0].vy + offset, verts[0].vz);
+	return vec;
+}

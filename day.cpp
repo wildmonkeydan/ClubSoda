@@ -1,5 +1,7 @@
 #include "day.h"
 
+#include <inline_c.h>
+
 #define setColour(c, red, blue, green) c.r = red; c.b = blue; c.g = green;
 
 constexpr int CYCLE_TIME = 18000;

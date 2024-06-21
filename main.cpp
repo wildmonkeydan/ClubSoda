@@ -29,6 +29,7 @@
 #include "toolbar.h"
 #include "bank.h"
 #include "jukebox.h"
+#include "menu.h"
 
 /* Main */
 
@@ -42,19 +43,23 @@ int main(int argc, const char **argv) {
 	RenderContext ctx;
 	ctx.setup(SCREEN_XRES, SCREEN_YRES, 63, 0, 127);
 
+	VECTOR menuCamPos = { 0, ONE * 2084, ONE * 37 };
 	VECTOR camPos = { ONE * 950, ONE * 1468, ONE * 950 };
 	VECTOR camRot = { ONE * -5992, ONE * 1520, 0 };
+
+	scSetClipRect(0, 0, SCREEN_XRES, SCREEN_YRES);
 
 	CD cd;
 	cd.Init();
 	Pad pad;
 	Cursor cursor;
-	Camera cam(camPos, camRot);
+	Camera cam(menuCamPos, camRot);
 	Island isle;
 	Toolbar toolbar;
 	Day day;
 	Bank bank;
 	Jukebox juke;
+	Menu menu(cd);
 
 	TIM_IMAGE img;
 
@@ -66,13 +71,31 @@ int main(int argc, const char **argv) {
 	LoadTexture(iconsDat, &img);
 	free(iconsDat);
 
+	u_long* canDat = (u_long*)cd.LoadFile("CAN.TIM;1");
+	LoadTexture(canDat, &img);
+	free(canDat);
+
 
 	int x  = 96, y  = 54;
 	int dx = 1, dy = 1;
 	int factor = UINT16_MAX / 120;
 
 	juke.Begin();
-	//FntOpen(0, 0, 320, 240, 0, 256);
+	FntOpen(0, 0, 320, 240, 0, 256);
+
+	while (1) {
+		cam.Update(pad, ctx, true);
+
+		if (menu.Update(pad))
+			break;
+
+		menu.Draw(ctx, cam);
+
+		ctx.flip();
+	}
+
+	cam = Camera(camPos, camRot);
+	menu.Unload();
 
 	for (;;) {		
 		day.Update();
@@ -82,6 +105,7 @@ int main(int argc, const char **argv) {
 		toolbar.Update(pad, cursor);
 		toolbar.Draw(ctx);
 		bank.Draw(ctx);
+		
 
 		/*
 		// Draw the square by allocating a TILE (i.e. untextured solid color
@@ -94,9 +118,11 @@ int main(int argc, const char **argv) {
 		setWH  (tile, 64, 64);
 		setRGB0(tile, 255, 255, 0);*/
 
-		cam.Update(pad, ctx);
+
+		cam.Update(pad, ctx, false);
 		isle.Update(cursor);
 		isle.Draw(ctx, cursor);
+		//menu.Draw(ctx, cam);
 
 		// Draw some text in front of the square (Z = 0, primitives with higher
 		// Z indices are drawn first).

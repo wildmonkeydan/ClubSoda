@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "utils.h"
 
 #include <inline_c.h>
 
@@ -24,11 +25,11 @@ Camera::Camera(VECTOR pos, VECTOR rot) {
 	gte_SetGeomScreen(CENTERX);
 
 	// Set light ambient color and light color matrix
-	gte_SetBackColor(64, 64, 64);
+	gte_SetBackColor(200, 200, 200);
 	gte_SetColorMatrix(&color_mtx);
 }
 
-void Camera::Update(Pad& pad, RenderContext& ctx) {
+void Camera::Update(Pad& pad, RenderContext& ctx, bool lookAt) {
 	
 
 	// Divide out fractions of camera rotation
@@ -97,7 +98,7 @@ void Camera::Update(Pad& pad, RenderContext& ctx) {
 
 	}
 
-	if (pad.IsButtonDown(PAD_R1)) {
+	if (pad.IsButtonDown(PAD_L1)) {
 
 		// Slide up
 		position.vx -= ((isin(trot.vy) * isin(trot.vx)) >> 12) << 2;
@@ -114,6 +115,17 @@ void Camera::Update(Pad& pad, RenderContext& ctx) {
 		position.vz -= ((icos(trot.vy) * isin(trot.vx)) >> 12) << 2;
 
 	}
+	
+	FntPrint(-1, "X=%d Y=%d Z=%d\n",
+		position.vx >> 12,
+		position.vy >> 12,
+		position.vz >> 12);
+	FntPrint(-1, "RX=%d RY=%d\n",
+		rotation.vx >> 12,
+		rotation.vy >> 12);
+
+	// Flush text to drawing area
+	FntFlush(-1);
 #endif
 
 	if (pad.GetType() == PadTypeID::PAD_ID_MOUSE) {
@@ -141,34 +153,41 @@ void Camera::Update(Pad& pad, RenderContext& ctx) {
 			}
 		}
 	}
+
 	
-	/*FntPrint(-1, "X=%d Y=%d Z=%d\n",
-		position.vx >> 12,
-		position.vy >> 12,
-		position.vz >> 12);
-	FntPrint(-1, "RX=%d RY=%d\n",
-		rotation.vx >> 12,
-		rotation.vy >> 12);
+	
 
-	// Flush text to drawing area
-	FntFlush(-1);*/
+	if (lookAt) {
+		// Vector that defines the 'up' direction of the camera
+		SVECTOR up = { 0, ONE, 0 };
+		VECTOR origin = { 0, 0, 0 };
 
-	// Set rotation to the matrix
-	RotMatrix(&trot, &mtx);
+		// Divide out fractions of camera coordinates
+		tpos.vx = position.vx >> 12;
+		tpos.vy = position.vy >> 12;
+		tpos.vz = position.vz >> 12;
 
-	// Divide out the fractions of camera coordinates and invert
-	// the sign, so camera coordinates will line up to world
-	// (or geometry) coordinates
-	tpos.vx = -position.vx >> 12;
-	tpos.vy = -position.vy >> 12;
-	tpos.vz = -position.vz >> 12;
+		// Look at the cube
+		LookAt(&tpos, &origin, &up, &mtx);
+	}
+	else {
+		// Set rotation to the matrix
+		RotMatrix(&trot, &mtx);
 
-	// Apply rotation of matrix to translation value to achieve a
-	// first person perspective
-	ApplyMatrixLV(&mtx, &tpos, &tpos);
+		// Divide out the fractions of camera coordinates and invert
+		// the sign, so camera coordinates will line up to world
+		// (or geometry) coordinates
+		tpos.vx = -position.vx >> 12;
+		tpos.vy = -position.vy >> 12;
+		tpos.vz = -position.vz >> 12;
 
-	// Set translation matrix
-	TransMatrix(&mtx, &tpos);
+		// Apply rotation of matrix to translation value to achieve a
+		// first person perspective
+		ApplyMatrixLV(&mtx, &tpos, &tpos);
+
+		// Set translation matrix
+		TransMatrix(&mtx, &tpos);
+	}
 
 	// Set rotation and translation matrix
 	gte_SetRotMatrix(&mtx);

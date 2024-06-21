@@ -9,7 +9,7 @@
 class Camera {
 public:
 	Camera(VECTOR pos, VECTOR rot);
-	void Update(Pad& pad, RenderContext& ctx);
+	void Update(Pad& pad, RenderContext& ctx, bool lookAt);
 	MATRIX* GetMatrix();
 	VECTOR position;
 
