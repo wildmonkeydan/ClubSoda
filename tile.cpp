@@ -1,5 +1,6 @@
 #include "tile.h"
 #include "utils.h"
+#include "object.h"
 
 #include <inline_c.h>
 
@@ -101,9 +102,17 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 		return;
 
 	bool hover = cursor.CheckTile(poly, index);
-	unsigned char colour = hover ? 200 : 128;
 
-	setRGB0(poly, colour, colour, colour);
+	if (!hover) {
+		MATRIX col;
+		gte_ReadLightMatrix(&col);
+
+		//printf("m0 %d %d %d\nm1 %d %d %d\nm2 %d %d %d\nt %d %d %d\n", col.m[0][0], col.m[0][1], col.m[0][2], col.m[1][0], col.m[1][1], col.m[1][2], col.m[2][0], col.m[2][1], col.m[2][2], col.t[0], col.t[1], col.t[2]);
+		setRGB0(poly, col.t[0] >> 4 , (col.t[1] >> 4), (col.t[2] >> 4));
+	}
+	else {
+		setRGB0(poly, 200, 200, 200);
+	}
 	// Set 256x256 area in VRAM the quad can use for it's texture
 	setTPage(poly, 1, 1, 640, 0);
 	// Set the Colour LUT as the texture is 8-bit indexed 
@@ -111,7 +120,7 @@ void Tile::Draw(VECTOR origin, RenderContext& ctx, RECT& screen_clip, unsigned c
 	SetMatUV(poly, waterFrame);
 
 	// Add the polygon to the draw queue
-	addPrim(ctx._buffers[ctx._active_buffer]._ot + p, poly);
+	addPrim(ctx._buffers[ctx._active_buffer]._ot + (p >> 2), poly);
 	poly++;
 
 	ctx._next_packet = (uint8_t*)poly;
@@ -159,14 +168,14 @@ void Tile::InitVerts(int pos) {
 void Tile::AlterDepth(short addend) {
 	printf("added %d to tile %d\n", addend, index);
 
+	if (obj != nullptr) {
+		printf("raised object\n");
+		obj->pos.vy += addend;
+		obj->pos.vx += 1024;
+	}
+
 	for (int i = 0; i < 4; i++) {
 		verts[i].vy += addend;
-	}
-}
-
-void Tile::AlterDepth(int absolute) {
-	for (int i = 0; i < 4; i++) {
-		verts[i].vy = absolute;
 	}
 }
 
@@ -192,6 +201,6 @@ Tile::Material Tile::GetMaterial() {
 
 VECTOR Tile::PlaceObject(int offset) {
 	VECTOR vec;
-	setVector(&vec, verts[0].vx, verts[0].vy + offset, verts[0].vz);
+	setVector(&vec, verts[0].vx + 512, verts[0].vy + offset, verts[0].vz + 512);
 	return vec;
 }

@@ -45,7 +45,7 @@ int main(int argc, const char **argv) {
 
 	VECTOR menuCamPos = { 0, ONE * 2084, ONE * 37 };
 	VECTOR camPos = { ONE * 950, ONE * 1468, ONE * 950 };
-	VECTOR camRot = { ONE * -5992, ONE * 1520, 0 };
+	VECTOR camRot = { ONE * -5992, ONE * 1536, 0 };
 
 	scSetClipRect(0, 0, SCREEN_XRES, SCREEN_YRES);
 
@@ -75,12 +75,15 @@ int main(int argc, const char **argv) {
 	LoadTexture(canDat, &img);
 	free(canDat);
 
+	u_long* objDat = (u_long*)cd.LoadFile("OBJS.TIM;1");
+	LoadTexture(objDat, &img);
+	free(objDat);
+
 
 	int x  = 96, y  = 54;
 	int dx = 1, dy = 1;
 	int factor = UINT16_MAX / 120;
 
-	juke.Begin();
 	FntOpen(0, 0, 320, 240, 0, 256);
 
 	while (1) {
@@ -96,6 +99,8 @@ int main(int argc, const char **argv) {
 
 	cam = Camera(camPos, camRot);
 	menu.Unload();
+	cursor.LoadObjects(cd);
+	juke.Begin();
 
 	for (;;) {		
 		day.Update();
@@ -120,8 +125,8 @@ int main(int argc, const char **argv) {
 
 
 		cam.Update(pad, ctx, false);
-		isle.Update(cursor);
-		isle.Draw(ctx, cursor);
+		isle.Update(cursor, bank);
+		isle.Draw(ctx, cursor, cam);
 		//menu.Draw(ctx, cam);
 
 		// Draw some text in front of the square (Z = 0, primitives with higher

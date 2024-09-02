@@ -16,6 +16,8 @@ constexpr int START_ISLAND_END = START_ISLAND_OFFSET + START_ISLAND_SIZE * WORLD
 constexpr int NUM_MAT = 4;					//  Sand   Beach  Grass    Forest
 constexpr unsigned char MAT_UVS[NUM_MAT][2] = { {0,0}, {0,0}, {64, 0}, {0, 64} };
 
+class Object;
+
 class Tile {
 public:
 	enum Material {
@@ -41,6 +43,9 @@ public:
 	VECTOR PlaceObject(int offset);
 	
 	bool isLand;
+	bool hasObject = false;
+	SVECTOR localVerts[4];
+	Object* obj = nullptr;
 private:
 	void InitVerts(int pos);
 	void SetMatUV(POLY_FT4* poly, unsigned char waterFrame);
@@ -48,7 +53,6 @@ private:
 	
 	Material material;
 	VECTOR verts[4];
-	SVECTOR localVerts[4];
 
 	short xDiff;
 	short zDiff;

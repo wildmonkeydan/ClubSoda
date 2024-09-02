@@ -18,8 +18,12 @@ constexpr CVECTOR BLACK = { 0, 0, 0, 0 };
 constexpr CVECTOR WHITE = { 255, 255, 255, 0 };
 constexpr CVECTOR SUNORANGE = { 255, 144, 49, 0 };
 
+constexpr CVECTOR NORMAL = { 128, 128, 128, 0 };
+constexpr CVECTOR LIGHTORANGE = { 83, 75, 0, 0 };
+constexpr CVECTOR NIGHT = { 42, 50, 72, 0 };
+
 Day::Day() {
-	timer = 0;
+	timer = SUNSET;
 	interpTime = 0;
 	setColour(sunlight, 128, 128, 128);
 	setColour(top, 20, 230, 130);
@@ -36,19 +40,25 @@ void Day::Update() {
 	if (timer > SUNSET && timer < MIDNIGHT) {
 		bottom = InterpColour(WHITE, SUNORANGE, SUNMOVE, timer - SUNSET);
 		top = InterpColour(DAYBLUE, WHITE, SUNMOVE, timer - SUNSET);
+		sunlight = InterpColour(NORMAL, LIGHTORANGE, SUNMOVE, timer - SUNSET);
 	}
 	else if(timer > MIDNIGHT && timer < SUNRISE){
 		bottom = InterpColour(SUNORANGE, BLACK, SUNMOVE << 1, timer - MIDNIGHT);
 		top = InterpColour(WHITE, NIGHTBLUE, SUNMOVE << 1, timer - MIDNIGHT);
+		sunlight = InterpColour(LIGHTORANGE, NIGHT, SUNMOVE << 1, timer - MIDNIGHT);
 	}
 	else if (timer > SUNRISE && timer < DAYBREAK) {
 		bottom = InterpColour(BLACK, SUNORANGE, SUNMOVE, timer - SUNRISE);
 		top = InterpColour(NIGHTBLUE, WHITE, SUNMOVE, timer - SUNRISE);
+		sunlight = InterpColour(NIGHT, LIGHTORANGE, SUNMOVE, timer - SUNRISE);
 	}
 	else if (timer > DAYBREAK) {
 		bottom = InterpColour(SUNORANGE, WHITE, SUNMOVE, timer - DAYBREAK);
 		top = InterpColour(WHITE, DAYBLUE, SUNMOVE, timer - DAYBREAK);
+		sunlight = InterpColour(LIGHTORANGE, NORMAL, SUNMOVE, timer - DAYBREAK);
 	}
+
+	gte_SetBackColor(sunlight.r, sunlight.g, sunlight.b);
 }
 
 void Day::Draw(RenderContext& ctx) {

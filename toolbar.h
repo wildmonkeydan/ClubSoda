@@ -19,6 +19,7 @@ public:
 	void Update(Pad& pad, Cursor& cursor);
 	void Draw(RenderContext& ctx);
 	Tile::Material GetCurrentMaterial();
+	int GetCurrentObject();
 private:
 	void DrawPaintBar(RenderContext& ctx);
 

@@ -1,9 +1,15 @@
 #include "toolbar.h"
 #include "utils.h"
 
+constexpr char* TOOL_NAMES[] = { "Select", "Terraform - LMB Raise Ground", "Place - LMB Place Object", "Destroy - NOT IMPLEMENTED", "Paint - LMB Paint", "Expand - LMB Toggle Ground" };
+
 Toolbar::Toolbar() {
 	tool = Paint;
 	material = Tile::Material::Grass;
+
+	for (int i = 0; i < 6; i++) {
+		scroll[i] = 0;
+	}
 }
 
 void Toolbar::Update(Pad& pad, Cursor& cursor) {
@@ -16,7 +22,7 @@ void Toolbar::Update(Pad& pad, Cursor& cursor) {
 		
 		move = pad.GetToolScroll();
 		char dst = cursor.tool + move;
-		cursor.tool = (Cursor::Tool)loop(0, NUM_TOOLS, dst);
+		cursor.tool = (Cursor::Tool)loop(0, NUM_TOOLS - 1, dst);
 		tool = (Tool)cursor.tool;
 
 		timer = 15;
@@ -62,6 +68,8 @@ void Toolbar::Draw(RenderContext& ctx) {
 	default:
 		break;
 	}
+
+	ctx.draw_text(16, 472, 0, TOOL_NAMES[tool]);
 }
 
 Tile::Material Toolbar::GetCurrentMaterial() {
@@ -99,4 +107,8 @@ void Toolbar::DrawPaintBar(RenderContext& ctx) {
 	auto tpage = ctx.new_primitive<DR_TPAGE>(1);
 
 	setDrawTPage(tpage, 1, 1, getTPage(1, 1, 640, 0));
+}
+
+int Toolbar::GetCurrentObject() {
+	return scroll[Place];
 }

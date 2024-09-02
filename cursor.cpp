@@ -15,6 +15,9 @@ constexpr char SURROUND_VERTS[][2] = { { 1, -1 }, { 1, 0 }, { 0, -1 },
 
 constexpr short	TERRA_STEP = 128;
 
+constexpr char* OBJ_PATHS[] = { "FLAT.SMD;1", "ICE.SMD;1", "PALM.SMD;1" };
+constexpr short OBJ_COST[] = { -500, -150, -20 };
+
 Cursor::Cursor() {
 	pos.vx = SCREEN_XRES>>1;
 	pos.vy = SCREEN_YRES>>1;
@@ -42,6 +45,7 @@ void Cursor::Update(Pad& pad, Island& isle, Toolbar& toolbar, Bank& bank) {
 			Terraform(isle);
 			break;
 		case Cursor::Place:
+			DoPlace(isle, toolbar, bank);
 			break;
 		case Cursor::Destroy:
 			break;
@@ -193,6 +197,16 @@ void Cursor::Terraform(Island& isle) {
 	}
 }
 
+void Cursor::DoPlace(Island& isle, Toolbar& toolbar, Bank& bank) {
+	Tile* main = isle.GetTileAtIndex(selectedTile);
+
+	if (main->isLand && !main->hasObject) {
+		if (bank.Alter(OBJ_COST[toolbar.GetCurrentObject()])) {
+			isle.AddObject((Object::Type)toolbar.GetCurrentObject(), objs[toolbar.GetCurrentObject()], main);
+		}
+	}
+}
+
 void Cursor::DoPaint(Island& isle, Toolbar& toolbar, Bank& bank) {
 	Tile* main = isle.GetTileAtIndex(selectedTile);
 
@@ -215,5 +229,13 @@ void Cursor::DoExpand(Island& isle, Toolbar& toolbar, Bank& bank) {
 	else {
 		main->SetMaterial(Tile::Waves);
 		bank.Alter(100);
+	}
+}
+
+void Cursor::LoadObjects(CD& cd) {
+	for (int i = 0; i < NUM_OBJECTS; i++) {
+		objDat[i] = cd.LoadFile(OBJ_PATHS[i]);
+		objs[i] = (SMD*)objDat[i];
+		smdInitData(objs[i]);
 	}
 }

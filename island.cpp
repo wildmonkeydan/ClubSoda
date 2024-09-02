@@ -22,10 +22,10 @@ Island::Island() {
 	setRECT(&normRect, 32, 32, 576, 416);
 	// Set clip region
 	setRECT(&screen_clip, 0, 0, SCREEN_XRES, SCREEN_YRES);
-	setVector(&pos, 0, 0, 0);
+	setVector(&pos, START_ISLAND_POS * 1024, 0, START_ISLAND_POS * 1024);
 }
 
-void Island::Update(Cursor& pad) {
+void Island::Update(Cursor& pad, Bank& bank) {
 	int dir = test_clip(&normRect, pad.pos.vx, pad.pos.vy);
 
 	if (dir & CLIP_LEFT) {
@@ -80,9 +80,13 @@ void Island::Update(Cursor& pad) {
 
 		timer = 0;
 	}
+
+	for (int i = 0; i < NUM_INSTANCES; i++) {
+		objs[i].Update(bank);
+	}
 }
 
-void Island::Draw(RenderContext& ctx, Cursor& cursor) {
+void Island::Draw(RenderContext& ctx, Cursor& cursor, Camera& cam) {
 
 	int start = (pos.vx >> 10) + ((pos.vz >> 10) << 7);
 	for (int i = start; i < start + 2048; i++) {
@@ -90,8 +94,21 @@ void Island::Draw(RenderContext& ctx, Cursor& cursor) {
 			map[i].Draw(pos, ctx, screen_clip, waterFrame, cursor);
 		}
 	}
+
+	for (int i = 0; i < NUM_INSTANCES; i++) {
+		objs[i].Draw(ctx, cam, pos);
+	}
 }
 
 Tile* Island::GetTileAtIndex(int index) {
 	return &map[index];
+}
+
+void Island::AddObject(Object::Type type, SMD* smd, Tile* on) {
+	objs[instanceIndex] = Object(type, smd, on);
+	instanceIndex++;
+
+	if (instanceIndex > NUM_INSTANCES) {
+		instanceIndex = 0;
+	}
 }

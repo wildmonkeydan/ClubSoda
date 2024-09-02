@@ -12,7 +12,7 @@ project(
 )
 
 file(GLOB _sources *.s *.cpp *.c *.h)
-psn00bsdk_add_executable(template GPREL ${_sources} cursor.cpp island.cpp tile.cpp day.cpp toolbar.cpp bank.cpp jukebox.cpp object.cpp menu.cpp)
+psn00bsdk_add_executable(template GPREL ${_sources} cursor.cpp island.cpp tile.cpp day.cpp toolbar.cpp bank.cpp jukebox.cpp object.cpp menu.cpp object.cpp)
 
 psn00bsdk_add_cd_image(
 	iso      # Target name
